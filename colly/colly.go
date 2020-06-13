@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const https = "https://"
+
 // Collector collects company data via colly HTML scraping.
 type Collector struct {
 	c   *colly.Collector
@@ -42,14 +44,14 @@ func (collector *Collector) Collect(filter func(company glass.Company) bool) ([]
 
 	c.OnHTML("div.eiHdrModule", func(e *colly.HTMLElement) {
 		company := glass.Company{}
-		companyLink := e.DOM.Find("a.tightAll.h2")
-		companyName := Purge(companyLink.Text())
-		details, ok := companyLink.Attr("href")
+		detailsLink := e.DOM.Find("a.tightAll.h2")
+		companyName := Purge(detailsLink.Text())
+		details, ok := detailsLink.Attr("href")
 		if ok {
 			company.DetailsURL = baseURL + details
 		}
 		url := e.DOM.Find("span.url").Text()
-		company.URL = Purge(url)
+		company.URL = https + Purge(url)
 		company.Name = Purge(companyName)
 		ratingText := e.DOM.Find("span.bigRating.strong.margRtSm.h1").Text()
 		company.Rating = ParseFloat(ratingText)

@@ -50,7 +50,7 @@ func (*Exporter) Export(companies []glass.Company) error {
 
 func writeRows(companies []glass.Company, writer *csv.Writer) error {
 	for _, c := range companies {
-		record := make([]string, 4)
+		record := make([]string, 5)
 		record[0] = c.Name
 		record[1] = fmt.Sprintf("%.1f", c.Rating)
 		record[2] = fmt.Sprintf("%d", c.NumReviews)
@@ -66,7 +66,7 @@ func writeRows(companies []glass.Company, writer *csv.Writer) error {
 }
 
 func writeHeader(writer *csv.Writer) error {
-	header := make([]string, 4)
+	header := make([]string, 5)
 	header[0] = "Company Name"
 	header[1] = "Rating"
 	header[2] = "Number of Reviews"

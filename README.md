@@ -12,8 +12,9 @@ Scrapes companies and exports them to csv. Contains the following information:
   * `-glassdoorURL` - mandatory; string; The URL to start scraping. Supports currently location pages, e.g. https://www.glassdoor.co.uk/Reviews/london-reviews-SRCH_IL.0,6_IM1035.htm
   * `-minRating` - optional; float; The minimum rating for a company to be collected, e.g. 3.5. Default 0.0.
   * `-minReviews` - optional; int; The minimum number of reviews for a company to be collected, e.g. 100. Default 10.
-* example execution 
- * `./main -glassdoorUrl "https://www.glassdoor.co.uk/Reviews/london-reviews-SRCH_IL.0,6_IM1035.htm" -minRating 3.5 -minReviews 50`
+
+## Example execution
+`./main -glassdoorUrl "https://www.glassdoor.co.uk/Reviews/london-reviews-SRCH_IL.0,6_IM1035.htm" -minRating 3.5 -minReviews 50`
  
  ## CSV Export
  Creates a csv file with the following content:
