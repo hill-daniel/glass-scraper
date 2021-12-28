@@ -42,23 +42,27 @@ func (collector *Collector) Collect(filter func(company glass.Company) bool) ([]
 		log.Infof("Visiting %s", url)
 	})
 
-	c.OnHTML("div.eiHdrModule", func(e *colly.HTMLElement) {
+	c.OnHTML("div.single-company-result", func(e *colly.HTMLElement) {
 		company := glass.Company{}
-		detailsLink := e.DOM.Find("a.tightAll.h2")
-		companyName := Purge(detailsLink.Text())
-		details, ok := detailsLink.Attr("href")
+		nameDiv := e.DOM.Find("div.col-9")
+		nameH2 := nameDiv.Find("h2")
+		nameH2Anchor := nameH2.Find("a")
+		companyName := Purge(nameH2Anchor.Text())
+		details, ok := nameH2Anchor.Attr("href")
 		if ok {
 			company.DetailsURL = baseURL + details
 		}
 		url := e.DOM.Find("span.url").Text()
 		company.URL = https + Purge(url)
 		company.Name = Purge(companyName)
-		ratingText := e.DOM.Find("span.bigRating.strong.margRtSm.h1").Text()
-		company.Rating = ParseFloat(ratingText)
-		reviewsEl := e.DOM.Find("a.eiCell.cell.reviews")
-		reviewsText := reviewsEl.Find("span.num.h2").Text()
-		company.NumReviews = int(ParseFloat(reviewsText))
 
+		contributionSection := e.DOM.Find("div.ei-contributions-count-wrap")
+		reviewAnchor := contributionSection.Find("a.reviews")
+		reviews := reviewAnchor.Find("span.num").Text()
+		company.NumReviews = int(ParseFloat(reviews))
+
+		ratingText := e.DOM.Find("span.bigRating.strong.margRtSm.h2").Text()
+		company.Rating = ParseFloat(ratingText)
 		if filter(company) {
 			companies = append(companies, company)
 		}
